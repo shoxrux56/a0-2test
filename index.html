@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Ruscha sanash testi</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ffffff;--fg:#14171f;--muted:#6b7280;--card:#f3f4f8;
+  --a:#5b4bff;--a-ink:#ffffff;--ok:#17a34a;--bad:#e5484d;
+  --ok-t:rgba(23,163,74,.14);--bad-t:rgba(229,72,77,.14);--line:rgba(120,125,140,.28);
+  --sun:#ffc83d;
+}
+@media (prefers-color-scheme:dark){:root{--bg:#0f1117;--fg:#eef0f6;--muted:#9aa1b2;--card:#1a1d27;--a:#8b7fff;--a-ink:#0f1117}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg)}
+body{margin:0;background:var(--bg);color:var(--fg);font:500 17px/1.45 Onest,system-ui,-apple-system,"Segoe UI",sans-serif}
+main{max-width:520px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 16px calc(36px + env(safe-area-inset-bottom))}
+button{font:inherit;color:inherit;cursor:pointer}
+button:focus-visible{outline:3px solid var(--a);outline-offset:2px}
+
+.top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.ttl{font-weight:700}
+.cnt{color:var(--muted);font-variant-numeric:tabular-nums;font-weight:600}
+.seg{display:flex;gap:4px;margin-bottom:22px}
+.seg i{flex:1;height:7px;border-radius:9px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line);transition:background .25s}
+.seg i.cur{background:var(--a)}.seg i.ok{background:var(--ok);box-shadow:none}.seg i.bad{background:var(--bad);box-shadow:none}
+
+.card{background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:20px 18px 22px;margin-bottom:16px}
+.lab{display:inline-block;background:var(--bg);border:1.5px solid var(--line);border-radius:99px;padding:2px 12px;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:12px}
+.q{margin:0;font-size:23px;line-height:1.28;font-weight:700;overflow-wrap:anywhere}
+.enter{animation:in .28s ease-out}
+
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 14px;margin:0 0 10px;
+  background:var(--card);border:2px solid var(--line);border-radius:16px;transition:transform .08s,border-color .15s,background .15s,opacity .2s}
+.opt:active:not(:disabled){transform:scale(.985)}
+.opt .chip{flex:none;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--bg);border:1.5px solid var(--line)}
+.opt .tx{flex:1;overflow-wrap:anywhere}
+.opt.idk{background:none;border-style:dashed;color:var(--muted)}
+.opt:disabled{cursor:default}
+.opt.ok{border-color:var(--ok);background:var(--ok-t)}
+.opt.ok .chip{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.bad{border-color:var(--bad);background:var(--bad-t);animation:shake .35s}
+.opt.bad .chip{background:var(--bad);border-color:var(--bad);color:#fff}
+.opt.dim{opacity:.5}
+
+.why{margin:4px 0 12px;padding:12px 14px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line);font-size:15px}
+.main,.sec{display:block;width:100%;text-align:center;padding:15px 16px;border-radius:16px;font-weight:700;margin-top:12px;border:2px solid transparent}
+.main{background:var(--a);color:var(--a-ink)}
+.sec{background:none;border-color:var(--line)}
+.main:active,.sec:active{transform:scale(.985)}
+
+.res{text-align:center;padding-top:6px}
+.ring{position:relative;width:176px;height:176px;margin:8px auto 14px}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:12;stroke-linecap:round}
+.ring .tr{stroke:var(--card)}
+.ring .pg{stroke:var(--ok);stroke-dasharray:327;stroke-dashoffset:327;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
+.ring.fail .pg{stroke:var(--sun)}
+.ring .sc{position:absolute;inset:0;display:grid;place-content:center;font-size:44px;font-weight:800;line-height:1}
+.ring .sc small{display:block;font-size:14px;font-weight:600;color:var(--muted);margin-top:6px}
+h1{font-size:25px;line-height:1.2;margin:0 0 6px}
+.muted{color:var(--muted);font-size:15px;margin:0}
+.bearline{display:flex;align-items:center;gap:10px;justify-content:center;margin:14px 0 0;font-size:16px}.bearline span{font-size:34px;line-height:1}.stats{display:flex;gap:10px;margin:18px 0 4px}
+.stats div{flex:1;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:10px 6px}
+.stats b{display:block;font-size:24px;font-weight:800}
+.stats div:first-child b{color:var(--ok)}.stats div:last-child b{color:var(--bad)}
+details{text-align:left;margin-top:14px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:4px 14px}
+summary{cursor:pointer;padding:10px 0;font-weight:700}
+.rv{padding:12px 0;border-top:1.5px solid var(--line);font-size:15px}
+.rv p{margin:0 0 6px;font-weight:600}
+.rv .no{color:var(--bad)}.rv .yes{color:var(--ok)}.rv .why{margin:8px 0 0}
+
+.cf{position:fixed;top:-20px;width:9px;height:14px;border-radius:2px;pointer-events:none;animation:fall 2.2s ease-in forwards;z-index:9}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body><main id="m"></main>
+<script>
+// ====== FAQAT SHU QISMNI ALMASHTIRING ======
+const PASS = 0.7;   // o'tish chegarasi (bot ham 70% deb hisoblaydi)
+const COUNT = 10;   // har testda bankdan nechta savol tasodifiy olinadi
+const TITLE = "🐻 Ruscha sanash testi";
+// [savol, to'g'ri javob, [noto'g'ri javoblar], (ixtiyoriy) izoh]
+const Q = [
+  ["5 ruscha qanday aytiladi?", "пять", ["шесть", "семь", "девять"]],
+  ["«три» qaysi son?", "3", ["2", "4", "13"]],
+  ["«восемь» qaysi son?", "8", ["7", "9", "18"]],
+  ["9 ruscha qanday aytiladi?", "девять", ["десять", "девяносто", "семь"], "девять (9) bilan девяносто (90) ni adashtirmang."],
+  ["«десять» qaysi son?", "10", ["20", "100", "11"]],
+  ["14 ruscha qanday aytiladi?", "четырнадцать", ["четыре", "сорок", "сорок четыре"], "11–19 sonlari «-надцать» bilan tugaydi: четыр + надцать."],
+  ["«двенадцать» qaysi son?", "12", ["2", "20", "22"]],
+  ["15 ruscha qanday aytiladi?", "пятнадцать", ["пятьдесят", "пятьсот", "пять"], "пятнадцать (15), пятьдесят (50) va пятьсот (500) boshqa-boshqa sonlar."],
+  ["20 ruscha qanday aytiladi?", "двадцать", ["двенадцать", "два", "тридцать"]],
+  ["«сорок» qaysi son?", "40", ["4", "14", "400"], "сорок — alohida so‘z, unda «-десят» qo‘shimchasi yo‘q."],
+  ["«пятьдесят» qaysi son?", "50", ["15", "500", "5"]],
+  ["90 ruscha qanday aytiladi?", "девяносто", ["девять", "девятьсот", "девятнадцать"], "девяносто ham alohida so‘z: 40 — сорок, 90 — девяносто, 100 — сто."],
+  ["21 ruscha qanday aytiladi?", "двадцать один", ["двадцать два", "двенадцать один", "тридцать один"], "Avval o‘nlik, keyin birlik: двадцать + один."],
+  ["«тридцать пять» qaysi son?", "35", ["53", "305", "25"]],
+  ["100 ruscha qanday aytiladi?", "сто", ["десять", "сорок", "двести"]],
+  ["«двести» qaysi son?", "200", ["20", "2", "2000"]],
+  ["300 ruscha qanday aytiladi?", "триста", ["тридцать", "три", "тысяча"]],
+  ["«пятьсот» qaysi son?", "500", ["50", "15", "5000"]],
+  ["245 ruscha qanday aytiladi?", "двести сорок пять", ["два сорок пять", "двадцать четыре пять", "двести пятьдесят четыре"], "Yuzlik + o‘nlik + birlik: двести + сорок + пять."],
+  ["1 000 ruscha qanday aytiladi?", "тысяча", ["сто", "миллион", "десять"]],
+  ["2 000 to‘g‘ri qaysi?", "две тысячи", ["два тысячи", "две тысяча", "два тысяч"], "«Тысяча» ayol rodida: одна тысяча, две тысячи. 2–4 dan keyin — тысячи."],
+  ["5 000 to‘g‘ri qaysi?", "пять тысяч", ["пять тысячи", "пять тысяча", "пятьдесят тысяч"], "5 va undan ko‘p sonlardan keyin — тысяч."],
+  ["3 000 000 — to‘g‘ri shaklni tanlang: три ___", "миллиона", ["миллион", "миллионов", "миллионы"], "1 — миллион, 2–4 — миллиона, 5 va undan ko‘p — миллионов."],
+  ["2 ta kitob: ___ книги", "две", ["два", "двух", "двум"], "«Книга» ayol rodida: одна книга, две книги. Erkak rodida: два стола."],
+];
+// ===========================================
+const tg = window.Telegram && Telegram.WebApp;
+try { tg.ready(); tg.expand(); } catch (e) {}
+const lessonId = parseInt(new URLSearchParams(location.search).get("l"), 10); // bot o'zi qo'shadi
+const m = document.getElementById("m");
+
+/* Telegram mavzusiga moslash */
+function theme() {
+  try {
+    const p = tg.themeParams || {}, r = document.documentElement.style;
+    const map = {"--bg": p.bg_color, "--fg": p.text_color, "--muted": p.hint_color, "--card": p.secondary_bg_color};
+    Object.keys(map).forEach(k => { if (map[k]) r.setProperty(k, map[k]); });
+    if (p.bg_color) { tg.setHeaderColor(p.bg_color); tg.setBackgroundColor(p.bg_color); }
+  } catch (e) {}
+}
+theme(); try { tg.onEvent("themeChanged", theme); } catch (e) {}
+
+const hap = t => { try { tg.HapticFeedback.notificationOccurred(t); } catch (e) {} };
+const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+let order, k, score, answers;
+const TOTAL = Math.min(COUNT, Q.length);
+function reset() { order = shuffle(Q.map((_, i) => i)).slice(0, TOTAL); k = 0; score = 0; answers = []; }
+
+function ask() {
+  const [q, ok, bad, why] = Q[order[k]];
+  m.replaceChildren();
+  const top = el("div", "top"); top.append(el("span", "ttl", TITLE), el("span", "cnt", (k + 1) + "/" + TOTAL));
+  const seg = el("div", "seg");
+  const dots = order.map((_, i) => { const d = el("i", i < k ? (answers[i].right ? "ok" : "bad") : i === k ? "cur" : ""); seg.append(d); return d; });
+  const card = el("div", "card enter");
+  card.append(el("span", "lab", "Savol " + (k + 1)), el("p", "q", q));
+  const o = el("div");
+  const list = shuffle([ok, ...bad]).concat(["Bilmayman"]);
+  list.forEach((t, i) => {
+    const idk = i === list.length - 1;
+    const b = el("button", "opt" + (idk ? " idk" : ""));
+    b.append(el("span", "chip", idk ? "?" : "ABCDEFGH"[i] || i + 1), el("span", "tx", t));
+    if (!idk && t === ok) b.dataset.ok = "1";
+    b.onclick = () => pick(b, !idk && t === ok, t, ok, why, o, dots);
+    o.append(b);
+  });
+  m.append(top, seg, card, o);
+}
+
+function pick(b, right, chosen, ok, why, o, dots) {
+  const btns = [...o.querySelectorAll("button")];
+  btns.forEach(x => { x.disabled = true; if (x.dataset.ok) x.classList.add("ok"); else if (x !== b) x.classList.add("dim"); });
+  if (right) score++; else if (!b.classList.contains("idk")) b.classList.add("bad");
+  answers[k] = {q: Q[order[k]][0], chosen: chosen, ok: ok, right: right, why: why};
+  dots[k].className = right ? "ok" : "bad";
+  hap(right ? "success" : "error");
+  const next = () => { k++; k < TOTAL ? ask() : end(); };
+  if (why) {
+    m.append(el("div", "why", why));
+    const n = el("button", "main", "Davom etish"); n.onclick = next; m.append(n);
+  } else setTimeout(next, right ? 700 : 1300);
+}
+
+function confetti() {
+  if (matchMedia("(prefers-reduced-motion:reduce)").matches) return;
+  const cols = ["#5b4bff", "#ffc83d", "#17a34a", "#e5484d", "#2bb3ff"];
+  for (let i = 0; i < 36; i++) {
+    const s = el("span", "cf"); s.style.left = Math.random() * 100 + "vw";
+    s.style.background = cols[i % cols.length]; s.style.animationDelay = Math.random() * .7 + "s";
+    document.body.append(s); setTimeout(() => s.remove(), 3200);
+  }
+}
+
+function end() {
+  const pct = score / TOTAL, pass = pct >= PASS, wrong = answers.filter(a => !a.right);
+  m.replaceChildren();
+  const seg = el("div", "seg");
+  answers.forEach(a => seg.append(el("i", a.right ? "ok" : "bad")));
+  const res = el("div", "res");
+
+  const ring = el("div", "ring" + (pass ? "" : " fail"));
+  ring.innerHTML = '<svg viewBox="0 0 120 120"><circle class="tr" cx="60" cy="60" r="52"/><circle class="pg" cx="60" cy="60" r="52"/></svg>';
+  const sc = el("div", "sc", score + "/" + TOTAL); sc.append(el("small", null, Math.round(pct * 100) + "%"));
+  ring.append(sc);
+
+  res.append(ring, el("h1", null, pass ? "Zo'r, o'tdingiz!" : "Hali yetarli emas"),
+    el("p", "muted", pass ? "Natijani botga yuboring, keyingi dars ochiladi."
+      : "O'tish uchun kamida " + Math.round(PASS * 100) + "% kerak. Darsni qayta o'qib, yana urinib ko'ring."));
+
+  const say = pass ? ["Молодец!", "Barakalla!"] : ["Ничего!", "Hechqisi yo'q!"];
+  const bear = el("div", "bearline"); bear.append(el("span", null, pass ? "🐻" : "🙈"), el("div", null, ""));
+  bear.lastChild.append(el("b", null, say[0]), document.createTextNode(" (" + say[1] + ")"));
+  res.append(bear);
+  const st = el("div", "stats");
+  [[score, "To'g'ri"], [TOTAL - score, "Xato"]].forEach(s => { const d = el("div"); d.append(el("b", null, s[0]), el("span", "muted", s[1])); st.append(d); });
+  res.append(st);
+
+  if (wrong.length) {
+    const d = el("details"); d.append(el("summary", null, "Xatolarni ko'rish (" + wrong.length + ")"));
+    wrong.forEach(a => {
+      const r = el("div", "rv"); r.append(el("p", null, a.q),
+        el("div", "no", "Sizning javobingiz: " + a.chosen),
+        el("div", "yes", "To'g'ri javob: " + a.ok));
+      if (a.why) r.append(el("div", "why", a.why));
+      d.append(r);
+    });
+    res.append(d);
+  }
+
+  const go = el("button", "main", pass ? "Natijani botga yuborish" : "Natijani yuborib, yopish");
+  go.onclick = () => {
+    const payload = JSON.stringify({l: lessonId, s: score, n: TOTAL});
+    if (tg && tg.platform && tg.platform !== "unknown" && Number.isInteger(lessonId)) tg.sendData(payload);
+    else alert("Bu test Telegram bot tugmasi orqali ochilishi kerak.");
+  };
+  const again = el("button", "sec", "Qayta urinib ko'rish");
+  again.onclick = () => { reset(); ask(); };
+  res.append(go, again);
+  m.append(seg, res);
+
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    ring.querySelector(".pg").style.strokeDashoffset = 327 * (1 - pct);
+  }));
+  hap(pass ? "success" : "warning");
+  if (pass) confetti();
+}
+
+reset(); ask();
+</script>
+</body></html>
