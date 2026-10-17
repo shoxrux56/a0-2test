@@ -3,242 +3,179 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Ruscha sanash testi</title>
+<title>Rus raqamlari testi</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#ffffff;--fg:#14171f;--muted:#6b7280;--card:#f3f4f8;
-  --a:#5b4bff;--a-ink:#ffffff;--ok:#17a34a;--bad:#e5484d;
-  --ok-t:rgba(23,163,74,.14);--bad-t:rgba(229,72,77,.14);--line:rgba(120,125,140,.28);
-  --sun:#ffc83d;
-}
-@media (prefers-color-scheme:dark){:root{--bg:#0f1117;--fg:#eef0f6;--muted:#9aa1b2;--card:#1a1d27;--a:#8b7fff;--a-ink:#0f1117}}
+:root{--p1:#4c1d95;--p2:#7c3aed;--b1:#0ea5e9;--y:#ffe600;--ink:#120a2a;--card:#fff;--tx:#1b1033;--mu:#6b6486;--ok:#22e06b;--bad:#ff3b5c;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--card:#1f1547;--tx:#fff;--mu:#a79ed0;--ink:#05020f;color-scheme:dark}}
+:root[data-theme="dark"]{--card:#1f1547;--tx:#fff;--mu:#a79ed0;--ink:#05020f;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{background:var(--bg)}
-body{margin:0;background:var(--bg);color:var(--fg);font:500 17px/1.45 Onest,system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:520px;margin:0 auto;padding:max(18px,env(safe-area-inset-top)) 16px calc(36px + env(safe-area-inset-bottom))}
-button{font:inherit;color:inherit;cursor:pointer}
-button:focus-visible{outline:3px solid var(--a);outline-offset:2px}
-
-.top{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
-.ttl{font-weight:700}
-.cnt{color:var(--muted);font-variant-numeric:tabular-nums;font-weight:600}
-.seg{display:flex;gap:4px;margin-bottom:22px}
-.seg i{flex:1;height:7px;border-radius:9px;background:var(--card);box-shadow:inset 0 0 0 1px var(--line);transition:background .25s}
-.seg i.cur{background:var(--a)}.seg i.ok{background:var(--ok);box-shadow:none}.seg i.bad{background:var(--bad);box-shadow:none}
-
-.card{background:var(--card);border:1.5px solid var(--line);border-radius:22px;padding:20px 18px 22px;margin-bottom:16px}
-.lab{display:inline-block;background:var(--bg);border:1.5px solid var(--line);border-radius:99px;padding:2px 12px;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:12px}
-.q{margin:0;font-size:23px;line-height:1.28;font-weight:700;overflow-wrap:anywhere}
-.enter{animation:in .28s ease-out}
-
-.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;padding:12px 14px;margin:0 0 10px;
-  background:var(--card);border:2px solid var(--line);border-radius:16px;transition:transform .08s,border-color .15s,background .15s,opacity .2s}
-.opt:active:not(:disabled){transform:scale(.985)}
-.opt .chip{flex:none;width:32px;height:32px;border-radius:10px;display:grid;place-items:center;font-weight:800;font-size:14px;background:var(--bg);border:1.5px solid var(--line)}
-.opt .tx{flex:1;overflow-wrap:anywhere}
-.opt.idk{background:none;border-style:dashed;color:var(--muted)}
-.opt:disabled{cursor:default}
-.opt.ok{border-color:var(--ok);background:var(--ok-t)}
-.opt.ok .chip{background:var(--ok);border-color:var(--ok);color:#fff}
-.opt.bad{border-color:var(--bad);background:var(--bad-t);animation:shake .35s}
-.opt.bad .chip{background:var(--bad);border-color:var(--bad);color:#fff}
-.opt.dim{opacity:.5}
-
-.why{margin:4px 0 12px;padding:12px 14px;border-radius:14px;background:var(--bg);border:1.5px solid var(--line);font-size:15px}
-.main,.sec{display:block;width:100%;text-align:center;padding:15px 16px;border-radius:16px;font-weight:700;margin-top:12px;border:2px solid transparent}
-.main{background:var(--a);color:var(--a-ink)}
-.sec{background:none;border-color:var(--line)}
-.main:active,.sec:active{transform:scale(.985)}
-
-.res{text-align:center;padding-top:6px}
-.ring{position:relative;width:176px;height:176px;margin:8px auto 14px}
-.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
-.ring circle{fill:none;stroke-width:12;stroke-linecap:round}
-.ring .tr{stroke:var(--card)}
-.ring .pg{stroke:var(--ok);stroke-dasharray:327;stroke-dashoffset:327;transition:stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1)}
-.ring.fail .pg{stroke:var(--sun)}
-.ring .sc{position:absolute;inset:0;display:grid;place-content:center;font-size:44px;font-weight:800;line-height:1}
-.ring .sc small{display:block;font-size:14px;font-weight:600;color:var(--muted);margin-top:6px}
-h1{font-size:25px;line-height:1.2;margin:0 0 6px}
-.muted{color:var(--muted);font-size:15px;margin:0}
-.bearline{display:flex;align-items:center;gap:10px;justify-content:center;margin:14px 0 0;font-size:16px}.bearline span{font-size:34px;line-height:1}.stats{display:flex;gap:10px;margin:18px 0 4px}
-.stats div{flex:1;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:10px 6px}
-.stats b{display:block;font-size:24px;font-weight:800}
-.stats div:first-child b{color:var(--ok)}.stats div:last-child b{color:var(--bad)}
-details{text-align:left;margin-top:14px;background:var(--card);border:1.5px solid var(--line);border-radius:16px;padding:4px 14px}
-summary{cursor:pointer;padding:10px 0;font-weight:700}
-.rv{padding:12px 0;border-top:1.5px solid var(--line);font-size:15px}
-.rv p{margin:0 0 6px;font-weight:600}
-.rv .no{color:var(--bad)}.rv .yes{color:var(--ok)}.rv .why{margin:8px 0 0}
-
-.cf{position:fixed;top:-20px;width:9px;height:14px;border-radius:2px;pointer-events:none;animation:fall 2.2s ease-in forwards;z-index:9}
-@keyframes in{from{opacity:0;transform:translateY(8px)}}
-@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
-@keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
-@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+body{margin:0;min-height:100dvh;color:#fff;font:700 17px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:linear-gradient(160deg,var(--p1),var(--p2) 55%,var(--b1));background-attachment:fixed;overflow-x:hidden}
+.sh{position:fixed;width:140px;height:140px;background:rgba(255,255,255,.1);transform:skew(-18deg) rotate(12deg);border-radius:22px;animation:fl 9s ease-in-out infinite;pointer-events:none;z-index:0}
+main{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:16px 16px 40px;min-height:100dvh}
+.hud{margin-bottom:18px;animation:dn .4s}
+.segs{display:flex;gap:5px}
+.segs i{flex:1;height:12px;background:rgba(255,255,255,.28);transform:skewX(-20deg);border-radius:3px;transition:background .3s}
+.segs i.d{background:var(--y);box-shadow:0 0 12px var(--y)}
+.segs i.c{background:#fff;animation:bl 1s infinite}
+.meta{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:14px;text-transform:uppercase;letter-spacing:.6px}
+.meta span:first-child{flex:1;opacity:.9}
+.pill{background:var(--ink);padding:5px 12px;border-radius:999px;font-size:15px;animation:pop .35s}
+.pill.hot{background:var(--bad)}
+.card{background:var(--card);color:var(--tx);border:4px solid var(--ink);border-radius:22px;box-shadow:0 9px 0 var(--ink);padding:22px 20px;margin-bottom:22px;animation:ci .5s cubic-bezier(.2,1.4,.4,1)}
+.q{font-size:25px;font-weight:900;line-height:1.25}
+.o{display:flex;align-items:center;gap:12px;width:100%;text-align:left;font:inherit;font-weight:800;font-size:20px;color:var(--tx);background:var(--card);border:4px solid var(--ink);border-radius:18px;box-shadow:0 6px 0 var(--ink);padding:12px 14px;margin-bottom:14px;cursor:pointer;transition:transform .08s,box-shadow .08s,background .2s;animation:oi .45s cubic-bezier(.2,1.3,.4,1) backwards;animation-delay:calc(var(--i)*70ms)}
+.o:active:not(:disabled){transform:translateY(5px);box-shadow:0 1px 0 var(--ink)}
+.o .l{flex:none;width:38px;height:38px;display:grid;place-items:center;background:var(--y);color:var(--ink);border:3px solid var(--ink);border-radius:10px;transform:skewX(-8deg);font-weight:900}
+.o.ok{background:var(--ok);color:var(--ink);animation:pu .5s}
+.o.bad{background:var(--bad);color:#fff;animation:sk .45s}
+.o.idk{justify-content:center;background:transparent;color:#fff;border:3px dashed rgba(255,255,255,.5);box-shadow:none;font-size:17px;padding:10px}
+.fb{text-align:center;font-size:22px;font-weight:900;min-height:34px;text-shadow:0 3px 0 var(--ink);animation:pop .3s}
+.title{text-align:center;margin-top:5vh}
+.logo{font-size:84px;display:inline-block;animation:bo 2.2s ease-in-out infinite;filter:drop-shadow(0 8px 0 rgba(0,0,0,.3))}
+h1{font-size:42px;line-height:1;margin:6px 0 4px;font-style:italic;font-weight:900;text-transform:uppercase;text-shadow:0 4px 0 var(--ink),0 8px 0 rgba(0,0,0,.25)}
+.ban{display:inline-block;background:var(--y);color:var(--ink);padding:6px 18px;transform:skewX(-12deg);font-weight:900;text-transform:uppercase;border:3px solid var(--ink);box-shadow:0 5px 0 var(--ink);margin:6px 0 22px}
+.info{display:flex;gap:10px;margin-bottom:22px}
+.info div{flex:1;background:rgba(0,0,0,.28);border-radius:16px;padding:12px 6px;text-align:center;font-size:13px;text-transform:uppercase}
+.info b{display:block;font-size:26px}
+.cta{display:block;width:100%;font:inherit;font-weight:900;font-size:22px;text-transform:uppercase;letter-spacing:1px;color:var(--ink);background:var(--y);border:4px solid var(--ink);border-radius:20px;box-shadow:0 8px 0 var(--ink);padding:18px;cursor:pointer;animation:cp 1.6s infinite}
+.cta:active{transform:translateY(6px);box-shadow:0 2px 0 var(--ink)}
+.res{text-align:center;padding-top:4vh}
+.stars{display:flex;justify-content:center;gap:8px;margin:10px 0}
+.st{font-size:62px;color:rgba(255,255,255,.3);animation:sp .6s backwards;animation-delay:calc(var(--i)*.28s + .6s)}
+.st.on{color:var(--y);text-shadow:0 4px 0 var(--ink),0 0 24px var(--y)}
+.big{display:inline-block;font-size:64px;font-weight:900;background:var(--card);color:var(--tx);border:4px solid var(--ink);border-radius:22px;box-shadow:0 9px 0 var(--ink);padding:6px 28px;margin:12px 0 18px;transform:rotate(-2deg)}
+.res p{opacity:.95;margin:0 4px 22px}
+.cf{position:fixed;inset:0;pointer-events:none;z-index:9}
+@keyframes ci{from{opacity:0;transform:translateY(40px) rotate(-4deg) scale(.9)}}
+@keyframes oi{from{opacity:0;transform:translateX(-30px) scale(.95)}}
+@keyframes dn{from{opacity:0;transform:translateY(-16px)}}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+@keyframes pu{40%{transform:scale(1.05)}}
+@keyframes sk{20%,60%{transform:translateX(-9px)}40%,80%{transform:translateX(9px)}}
+@keyframes bl{50%{opacity:.45}}
+@keyframes fl{50%{transform:skew(-18deg) rotate(22deg) translateY(-40px)}}
+@keyframes bo{50%{transform:translateY(-12px) rotate(4deg)}}
+@keyframes cp{50%{transform:scale(1.035)}}
+@keyframes sp{from{transform:scale(0) rotate(-120deg);opacity:0}}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body><main id="m"></main>
 <script>
 // ====== FAQAT SHU QISMNI ALMASHTIRING ======
-const PASS = 0.7;   // o'tish chegarasi (bot ham 70% deb hisoblaydi)
-const COUNT = 10;   // har testda bankdan nechta savol tasodifiy olinadi
-const TITLE = "🐻 Ruscha sanash testi";
-// [savol, to'g'ri javob, [noto'g'ri javoblar], (ixtiyoriy) izoh]
+const PASS = 0.8; // o'tish chegarasi (bot ham 80% deb hisoblaydi)
+const TITLE = "Rus raqamlari testi";
+// [savol, to'g'ri javob, [noto'g'ri javoblar]]
 const Q = [
-  ["5 ruscha qanday aytiladi?", "пять", ["шесть", "семь", "девять"]],
-  ["«три» qaysi son?", "3", ["2", "4", "13"]],
-  ["«восемь» qaysi son?", "8", ["7", "9", "18"]],
-  ["9 ruscha qanday aytiladi?", "девять", ["десять", "девяносто", "семь"], "девять (9) bilan девяносто (90) ni adashtirmang."],
-  ["«десять» qaysi son?", "10", ["20", "100", "11"]],
-  ["14 ruscha qanday aytiladi?", "четырнадцать", ["четыре", "сорок", "сорок четыре"], "11–19 sonlari «-надцать» bilan tugaydi: четыр + надцать."],
-  ["«двенадцать» qaysi son?", "12", ["2", "20", "22"]],
-  ["15 ruscha qanday aytiladi?", "пятнадцать", ["пятьдесят", "пятьсот", "пять"], "пятнадцать (15), пятьдесят (50) va пятьсот (500) boshqa-boshqa sonlar."],
-  ["20 ruscha qanday aytiladi?", "двадцать", ["двенадцать", "два", "тридцать"]],
-  ["«сорок» qaysi son?", "40", ["4", "14", "400"], "сорок — alohida so‘z, unda «-десят» qo‘shimchasi yo‘q."],
-  ["«пятьдесят» qaysi son?", "50", ["15", "500", "5"]],
-  ["90 ruscha qanday aytiladi?", "девяносто", ["девять", "девятьсот", "девятнадцать"], "девяносто ham alohida so‘z: 40 — сорок, 90 — девяносто, 100 — сто."],
-  ["21 ruscha qanday aytiladi?", "двадцать один", ["двадцать два", "двенадцать один", "тридцать один"], "Avval o‘nlik, keyin birlik: двадцать + один."],
-  ["«тридцать пять» qaysi son?", "35", ["53", "305", "25"]],
-  ["100 ruscha qanday aytiladi?", "сто", ["десять", "сорок", "двести"]],
-  ["«двести» qaysi son?", "200", ["20", "2", "2000"]],
-  ["300 ruscha qanday aytiladi?", "триста", ["тридцать", "три", "тысяча"]],
-  ["«пятьсот» qaysi son?", "500", ["50", "15", "5000"]],
-  ["245 ruscha qanday aytiladi?", "двести сорок пять", ["два сорок пять", "двадцать четыре пять", "двести пятьдесят четыре"], "Yuzlik + o‘nlik + birlik: двести + сорок + пять."],
-  ["1 000 ruscha qanday aytiladi?", "тысяча", ["сто", "миллион", "десять"]],
-  ["2 000 to‘g‘ri qaysi?", "две тысячи", ["два тысячи", "две тысяча", "два тысяч"], "«Тысяча» ayol rodida: одна тысяча, две тысячи. 2–4 dan keyin — тысячи."],
-  ["5 000 to‘g‘ri qaysi?", "пять тысяч", ["пять тысячи", "пять тысяча", "пятьдесят тысяч"], "5 va undan ko‘p sonlardan keyin — тысяч."],
-  ["3 000 000 — to‘g‘ri shaklni tanlang: три ___", "миллиона", ["миллион", "миллионов", "миллионы"], "1 — миллион, 2–4 — миллиона, 5 va undan ko‘p — миллионов."],
-  ["2 ta kitob: ___ книги", "две", ["два", "двух", "двум"], "«Книга» ayol rodida: одна книга, две книги. Erkak rodida: два стола."],
+  ["«пять» qaysi raqam?", "5", ["15", "50", "500"]],
+  ["«пятнадцать» qaysi raqam?", "15", ["5", "50", "150"]],
+  ["«пятьдесят» qaysi raqam?", "50", ["15", "5", "500"]],
+  ["«пятьсот» qaysi raqam?", "500", ["50", "5000", "15"]],
+  ["«пять тысяч» qaysi raqam?", "5000", ["500", "50", "5"]],
+  ["4 rus tilida qanday?", "четыре", ["четырнадцать", "сорок", "четыреста"]],
+  ["14 rus tilida qanday?", "четырнадцать", ["четыре", "сорок", "четыреста"]],
+  ["40 rus tilida qanday?", "сорок", ["четыре", "четырнадцать", "четыреста"]],
+  ["400 rus tilida qanday?", "четыреста", ["сорок", "четыре", "четыре тысячи"]],
+  ["«семнадцать» qaysi raqam?", "17", ["7", "70", "170"]],
+  ["47 rus tilida qanday?", "сорок семь", ["семьдесят четыре", "четыре семь", "сорок пять"]],
+  ["300 rus tilida qanday?", "триста", ["тридцать", "три", "три тысячи"]],
+  ["2000 rus tilida qanday?", "две тысячи", ["двести", "двадцать", "два"]],
+  ["1500 rus tilida qanday?", "тысяча пятьсот", ["пятьсот", "пятнадцать", "тысяча пятьдесят"]],
+  ["Oxiri «-надцать» bo'lgan sonlar qaysi oraliqda?", "11 dan 19 gacha", ["20 dan 90 gacha", "100 dan 900 gacha", "1000 dan 5000 gacha"]],
 ];
 // ===========================================
 const tg = window.Telegram && Telegram.WebApp;
-try { tg.ready(); tg.expand(); } catch (e) {}
+try { tg.ready(); tg.expand(); tg.setHeaderColor("#4c1d95"); tg.setBackgroundColor("#4c1d95"); } catch (e) {}
 const lessonId = parseInt(new URLSearchParams(location.search).get("l"), 10); // bot o'zi qo'shadi
 const m = document.getElementById("m");
-
-/* Telegram mavzusiga moslash */
-function theme() {
-  try {
-    const p = tg.themeParams || {}, r = document.documentElement.style;
-    const map = {"--bg": p.bg_color, "--fg": p.text_color, "--muted": p.hint_color, "--card": p.secondary_bg_color};
-    Object.keys(map).forEach(k => { if (map[k]) r.setProperty(k, map[k]); });
-    if (p.bg_color) { tg.setHeaderColor(p.bg_color); tg.setBackgroundColor(p.bg_color); }
-  } catch (e) {}
+const shuffle = a => a.map(v => [Math.random(), v]).sort((x, y) => x[0] - y[0]).map(x => x[1]);
+const order = shuffle(Q.map((_, i) => i));
+let k = 0, score = 0, streak = 0;
+const OKW = ["Zo'r!", "Barakalla!", "Ajoyib!", "Super!", "Ofarin!"];
+const BADW = ["Hechqisi yo'q!", "Deyarli!", "Keyingisida!"];
+const rnd = a => a[Math.floor(Math.random() * a.length)];
+function hap(t) {
+  try { tg.HapticFeedback.notificationOccurred(t); } catch (e) {}
+  try { navigator.vibrate && navigator.vibrate(t === "success" ? 20 : [30, 40, 30]); } catch (e) {}
 }
-theme(); try { tg.onEvent("themeChanged", theme); } catch (e) {}
-
-const hap = t => { try { tg.HapticFeedback.notificationOccurred(t); } catch (e) {} };
-const el = (t, c, x) => { const e = document.createElement(t); if (c) e.className = c; if (x != null) e.textContent = x; return e; };
-const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
-
-let order, k, score, answers;
-const TOTAL = Math.min(COUNT, Q.length);
-function reset() { order = shuffle(Q.map((_, i) => i)).slice(0, TOTAL); k = 0; score = 0; answers = []; }
-
+for (let i = 0; i < 5; i++) {
+  const s = document.createElement("div");
+  s.className = "sh";
+  s.style.cssText = `left:${[-40, 70, 20, 80, 45][i]}%;top:${[8, 20, 55, 72, 88][i]}%;animation-delay:-${i * 2}s;width:${90 + i * 20}px;height:${90 + i * 20}px`;
+  document.body.appendChild(s);
+}
+function intro() {
+  m.innerHTML = `<div class="title"><div class="logo">🇷🇺</div><h1>Rus raqamlari</h1><div class="ban">${TITLE}</div></div>
+    <div class="info"><div><b>${Q.length}</b>savol</div><div><b>${Math.round(PASS * 100)}%</b>o'tish</div><div><b>⭐</b>ball yig'ing</div></div>
+    <button class="cta" id="st">Boshlash</button>`;
+  document.getElementById("st").onclick = ask;
+}
+function hud() {
+  return `<div class="hud"><div class="segs">${Q.map((_, i) => `<i class="${i < k ? "d" : i === k ? "c" : ""}"></i>`).join("")}</div>
+    <div class="meta"><span>${TITLE} · ${k + 1}/${Q.length}</span><span class="pill">⭐ ${score}</span>${streak >= 2 ? `<span class="pill hot">🔥 x${streak}</span>` : ""}</div></div>`;
+}
 function ask() {
-  const [q, ok, bad, why] = Q[order[k]];
-  m.replaceChildren();
-  const top = el("div", "top"); top.append(el("span", "ttl", TITLE), el("span", "cnt", (k + 1) + "/" + TOTAL));
-  const seg = el("div", "seg");
-  const dots = order.map((_, i) => { const d = el("i", i < k ? (answers[i].right ? "ok" : "bad") : i === k ? "cur" : ""); seg.append(d); return d; });
-  const card = el("div", "card enter");
-  card.append(el("span", "lab", "Savol " + (k + 1)), el("p", "q", q));
-  const o = el("div");
-  const list = shuffle([ok, ...bad]).concat(["Bilmayman"]);
-  list.forEach((t, i) => {
-    const idk = i === list.length - 1;
-    const b = el("button", "opt" + (idk ? " idk" : ""));
-    b.append(el("span", "chip", idk ? "?" : "ABCDEFGH"[i] || i + 1), el("span", "tx", t));
-    if (!idk && t === ok) b.dataset.ok = "1";
-    b.onclick = () => pick(b, !idk && t === ok, t, ok, why, o, dots);
-    o.append(b);
+  const [q, ok, bad] = Q[order[k]];
+  m.innerHTML = hud() + `<div class="card"><div class="q"></div></div><div id="o"></div><div class="fb" id="fb"></div>`;
+  m.querySelector(".q").textContent = q;
+  const o = document.getElementById("o");
+  shuffle([ok, ...bad]).concat(["Bilmayman"]).forEach((t, i) => {
+    const b = document.createElement("button");
+    b.style.setProperty("--i", i);
+    if (t === "Bilmayman") { b.className = "o idk"; b.textContent = "🤷 Bilmayman"; }
+    else { b.className = "o"; b.innerHTML = `<span class="l">${"ABCD"[i]}</span><span class="t"></span>`; b.querySelector(".t").textContent = t; }
+    b.dataset.t = t;
+    b.onclick = () => pick(b, t === ok, ok);
+    o.appendChild(b);
   });
-  m.append(top, seg, card, o);
 }
-
-function pick(b, right, chosen, ok, why, o, dots) {
-  const btns = [...o.querySelectorAll("button")];
-  btns.forEach(x => { x.disabled = true; if (x.dataset.ok) x.classList.add("ok"); else if (x !== b) x.classList.add("dim"); });
-  if (right) score++; else if (!b.classList.contains("idk")) b.classList.add("bad");
-  answers[k] = {q: Q[order[k]][0], chosen: chosen, ok: ok, right: right, why: why};
-  dots[k].className = right ? "ok" : "bad";
-  hap(right ? "success" : "error");
-  const next = () => { k++; k < TOTAL ? ask() : end(); };
-  if (why) {
-    m.append(el("div", "why", why));
-    const n = el("button", "main", "Davom etish"); n.onclick = next; m.append(n);
-  } else setTimeout(next, right ? 700 : 1300);
+function pick(b, right, ok) {
+  [...document.querySelectorAll("#o button")].forEach(x => { x.disabled = true; if (x.dataset.t === ok) x.classList.add("ok"); });
+  const fb = document.getElementById("fb");
+  if (right) { score++; streak++; fb.textContent = rnd(OKW) + " ✅"; hap("success"); }
+  else { streak = 0; b.classList.add("bad"); fb.textContent = rnd(BADW); hap("error"); }
+  setTimeout(() => { k++; k < Q.length ? ask() : end(); }, 1000);
 }
-
+function countUp(el, to) {
+  let s = null;
+  (function f(ts) {
+    s = s || ts;
+    const p = Math.min((ts - s) / 900, 1);
+    el.textContent = Math.round(to * (1 - Math.pow(1 - p, 3))) + "/" + Q.length;
+    if (p < 1) requestAnimationFrame(f);
+  })(performance.now());
+}
 function confetti() {
-  if (matchMedia("(prefers-reduced-motion:reduce)").matches) return;
-  const cols = ["#5b4bff", "#ffc83d", "#17a34a", "#e5484d", "#2bb3ff"];
-  for (let i = 0; i < 36; i++) {
-    const s = el("span", "cf"); s.style.left = Math.random() * 100 + "vw";
-    s.style.background = cols[i % cols.length]; s.style.animationDelay = Math.random() * .7 + "s";
-    document.body.append(s); setTimeout(() => s.remove(), 3200);
-  }
+  const c = document.createElement("canvas"); c.className = "cf"; document.body.appendChild(c);
+  const x = c.getContext("2d"), w = c.width = innerWidth, h = c.height = innerHeight;
+  const cols = ["#ffe600", "#22e06b", "#ff3b5c", "#38bdf8", "#fff"];
+  const P = Array.from({length: 100}, () => ({x: Math.random() * w, y: -20 - Math.random() * h * .5, vx: (Math.random() - .5) * 4, vy: 2 + Math.random() * 4, s: 6 + Math.random() * 8, r: Math.random() * 6, vr: (Math.random() - .5) * .4, c: cols[Math.random() * 5 | 0]}));
+  let t = 0;
+  (function f() {
+    x.clearRect(0, 0, w, h);
+    P.forEach(p => { p.x += p.vx; p.y += p.vy; p.r += p.vr; x.save(); x.translate(p.x, p.y); x.rotate(p.r); x.fillStyle = p.c; x.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2); x.restore(); });
+    ++t < 180 ? requestAnimationFrame(f) : c.remove();
+  })();
 }
-
 function end() {
-  const pct = score / TOTAL, pass = pct >= PASS, wrong = answers.filter(a => !a.right);
-  m.replaceChildren();
-  const seg = el("div", "seg");
-  answers.forEach(a => seg.append(el("i", a.right ? "ok" : "bad")));
-  const res = el("div", "res");
-
-  const ring = el("div", "ring" + (pass ? "" : " fail"));
-  ring.innerHTML = '<svg viewBox="0 0 120 120"><circle class="tr" cx="60" cy="60" r="52"/><circle class="pg" cx="60" cy="60" r="52"/></svg>';
-  const sc = el("div", "sc", score + "/" + TOTAL); sc.append(el("small", null, Math.round(pct * 100) + "%"));
-  ring.append(sc);
-
-  res.append(ring, el("h1", null, pass ? "Zo'r, o'tdingiz!" : "Hali yetarli emas"),
-    el("p", "muted", pass ? "Natijani botga yuboring, keyingi dars ochiladi."
-      : "O'tish uchun kamida " + Math.round(PASS * 100) + "% kerak. Darsni qayta o'qib, yana urinib ko'ring."));
-
-  const say = pass ? ["Молодец!", "Barakalla!"] : ["Ничего!", "Hechqisi yo'q!"];
-  const bear = el("div", "bearline"); bear.append(el("span", null, pass ? "🐻" : "🙈"), el("div", null, ""));
-  bear.lastChild.append(el("b", null, say[0]), document.createTextNode(" (" + say[1] + ")"));
-  res.append(bear);
-  const st = el("div", "stats");
-  [[score, "To'g'ri"], [TOTAL - score, "Xato"]].forEach(s => { const d = el("div"); d.append(el("b", null, s[0]), el("span", "muted", s[1])); st.append(d); });
-  res.append(st);
-
-  if (wrong.length) {
-    const d = el("details"); d.append(el("summary", null, "Xatolarni ko'rish (" + wrong.length + ")"));
-    wrong.forEach(a => {
-      const r = el("div", "rv"); r.append(el("p", null, a.q),
-        el("div", "no", "Sizning javobingiz: " + a.chosen),
-        el("div", "yes", "To'g'ri javob: " + a.ok));
-      if (a.why) r.append(el("div", "why", a.why));
-      d.append(r);
-    });
-    res.append(d);
-  }
-
-  const go = el("button", "main", pass ? "Natijani botga yuborish" : "Natijani yuborib, yopish");
-  go.onclick = () => {
-    const payload = JSON.stringify({l: lessonId, s: score, n: TOTAL});
+  const pct = score / Q.length, pass = pct >= PASS;
+  const stars = pct >= .9 ? 3 : pass ? 2 : pct >= .5 ? 1 : 0;
+  m.innerHTML = `<div class="hud"><div class="segs">${Q.map(() => `<i class="d"></i>`).join("")}</div></div>
+    <div class="res"><div class="stars">${[1, 2, 3].map(i => `<span class="st ${i <= stars ? "on" : ""}" style="--i:${i}">★</span>`).join("")}</div>
+    <h1>${pass ? "G'alaba! 🏆" : "Yana urinib ko'ring 💪"}</h1>
+    <div class="big" id="sc">0/${Q.length}</div>
+    <p>${pass ? "Natijani botga yuboring, keyingi dars ochiladi." : "O'tish uchun kamida " + Math.round(PASS * 100) + "% kerak. Darsni qayta o'qib, yana urinib ko'ring."}</p>
+    <button class="cta" id="go">${pass ? "Natijani botga yuborish" : "Natijani yuborib, yopish"}</button></div>`;
+  countUp(document.getElementById("sc"), score);
+  if (pass) { confetti(); hap("success"); } else hap("warning");
+  document.getElementById("go").onclick = () => {
+    const payload = JSON.stringify({l: lessonId, s: score, n: Q.length});
     if (tg && tg.platform && tg.platform !== "unknown" && Number.isInteger(lessonId)) tg.sendData(payload);
     else alert("Bu test Telegram bot tugmasi orqali ochilishi kerak.");
   };
-  const again = el("button", "sec", "Qayta urinib ko'rish");
-  again.onclick = () => { reset(); ask(); };
-  res.append(go, again);
-  m.append(seg, res);
-
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    ring.querySelector(".pg").style.strokeDashoffset = 327 * (1 - pct);
-  }));
-  hap(pass ? "success" : "warning");
-  if (pass) confetti();
 }
-
-reset(); ask();
+intro();
 </script>
 </body></html>
